@@ -173,6 +173,6 @@ app.listen(PORT, () => {
 });
 
 // Reemplaza por una ruta simple para la raíz
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({ message: 'API server running' });
 });
