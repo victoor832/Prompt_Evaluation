@@ -15,6 +15,20 @@ const dbService = DatabaseService.getInstance();
 dbService.connect().catch(err => {
   console.warn('No se pudo conectar a MongoDB inicialmente:', err.message);
 });
+
+// Configuración para servir archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, '../../frontend/build')));
+
+// Ruta para manejar todas las solicitudes que no sean API
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../../frontend/build/index.html'));
+  } else {
+    res.status(404).json({ error: 'API endpoint not found' });
+  }
+});
+
+
 // Middleware para verificación de admin
 const adminAuth = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   const adminKey = process.env.ADMIN_API_KEY;
@@ -172,7 +186,3 @@ app.listen(PORT, () => {
     console.log(`Try accessing: http://localhost:${PORT}/api/test`);
 });
 
-// Reemplaza por una ruta simple para la raíz
-app.get('/', (_req, res) => {
-  res.json({ message: 'API server running' });
-});
