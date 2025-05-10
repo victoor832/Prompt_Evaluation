@@ -172,16 +172,7 @@ app.listen(PORT, () => {
     console.log(`Try accessing: http://localhost:${PORT}/api/test`);
 });
 
-// Servir archivos estáticos del frontend
-app.use(express.static(path.join(__dirname, '../../frontend/dist')));
-
-// Configurar todas las rutas no-API para que devuelvan el index.html del frontend
-// Importante: Colocar esto DESPUÉS de todas tus rutas de API
-app.get('*', (req, res) => {
-  // No afectar a las rutas de API
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
-  } else {
-    res.status(404).json({ error: 'API endpoint not found' });
-  }
+// Reemplaza por una ruta simple para la raíz
+app.get('/', (req, res) => {
+  res.json({ message: 'API server running' });
 });
