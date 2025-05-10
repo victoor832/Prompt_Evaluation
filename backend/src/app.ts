@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import { setRoutes } from './routes/index';
 import 'dotenv/config';
 import { AIService } from './services/aiService';
@@ -169,4 +170,18 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Try accessing: http://localhost:${PORT}/api/test`);
+});
+
+// Servir archivos estáticos del frontend
+app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+
+// Configurar todas las rutas no-API para que devuelvan el index.html del frontend
+// Importante: Colocar esto DESPUÉS de todas tus rutas de API
+app.get('*', (req, res) => {
+  // No afectar a las rutas de API
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+  } else {
+    res.status(404).json({ error: 'API endpoint not found' });
+  }
 });
