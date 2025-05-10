@@ -10,6 +10,7 @@ export class DatabaseService {
   private connected: boolean = false;
   private connecting: boolean = false;
 
+
   constructor() {
     const mongoUri = process.env.MONGODB_URI;
     if (!mongoUri) {
