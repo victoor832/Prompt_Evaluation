@@ -47,6 +47,73 @@
     transform: translateY(0);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
+/* Media queries para dispositivos móviles */
+@media (max-width: 768px) {
+    .App-header h1 {
+      font-size: 1.5rem;
+    }
+    
+    .App-header p {
+      font-size: 0.9rem;
+    }
+    
+    .home-link,
+    .ranking-link {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+    
+    /* Ajustar estilos del contenido principal */
+    main {
+      padding: 0 10px;
+    }
+    
+    /* Ajustar el tamaño del formulario */
+    form {
+      padding: 15px;
+    }
+    
+    /* Asegurarse de que el texto en los inputs sea legible */
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      font-size: 16px; /* Evita el zoom automático en iOS */
+    }
+    
+    /* Hacer los botones más grandes para tocar con el dedo */
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+    }
+  }
+  
+  /* Media queries para dispositivos muy pequeños */
+  @media (max-width: 480px) {
+    .App-header h1 {
+      font-size: 1.3rem;
+    }
+    
+    .App-header p {
+      font-size: 0.8rem;
+    }
+    
+    .nav-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .home-link,
+    .ranking-link {
+      width: 80%;
+      text-align: center;
+    }
+  }
+
+
+
   /* HEADER */
 
 body {
@@ -69,6 +136,47 @@ header {
     min-width: 100dvh;
 
     text-align: center;
+}
+
+/* Media queries para dispositivos móviles */
+@media (max-width: 768px) {
+    /* Otros estilos que ya tienes... */
+    
+    /* Estilos específicos para header */
+    header {
+        padding: 1.5rem 0;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    header p {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Media queries para dispositivos muy pequeños */
+@media (max-width: 480px) {
+    /* Otros estilos que ya tienes... */
+    
+    /* Estilos específicos para header */
+    header {
+        min-width: 46dvh;
+        padding: 1rem 0;
+    }
+    
+    header h1 {
+        font-size: 1.3rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    header p {
+        font-size: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
 }
 
 h1 {
