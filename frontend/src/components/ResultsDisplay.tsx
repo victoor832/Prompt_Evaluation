@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import './ResultDisplay.css';
 
 interface ResultsDisplayProps {
@@ -29,6 +30,56 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
     );
   }
 
+  // Función para convertir texto Markdown a HTML
+  function convertMarkdownToHtml(text: string): string {
+    // Escapar caracteres HTML especiales
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    
+    // Convertir negrita (**texto**) a <strong>texto</strong>
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    // Convertir cursiva (*texto*) a <em>texto</em>
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    
+    return html;
+  }
+
+  // Función simplificada para formatear las recomendaciones
+  function formatRecommendations(text: string): string {
+    if (!text) return '';
+    
+    // Si ya está formateado correctamente, devolverlo como está
+    if (text.includes('\n- ')) return text;
+    
+    // Dividir por el patrón " - " que separa las recomendaciones (espacio, guión, espacio)
+    const parts = text.split(/ - /);
+    
+    if (parts.length <= 1) {
+      // Si no hay separaciones por " - ", intentar otro enfoque
+      return text.replace(/(\.)(\s*-)/, '$1\n\n-').replace(/^-/, '- ');
+    }
+    
+    // Formatear como lista de Markdown
+    let formatted = '';
+    
+    // El primer elemento puede necesitar un tratamiento especial
+    if (parts[0].trim().startsWith('-')) {
+      formatted = parts[0].trim() + '\n\n';
+    } else {
+      formatted = '- ' + parts[0].trim() + '\n\n';
+    }
+    
+    // Procesar el resto de elementos
+    for (let i = 1; i < parts.length; i++) {
+      formatted += '- ' + parts[i].trim() + '\n\n';
+    }
+    
+    return formatted;
+  }
+
   // Comprobar el tipo de evaluación y extraer los datos
   let score1, score2, justification, conclusion, recommendations;
   
@@ -39,14 +90,14 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
     score2 = "N/A";
     justification = parts[2] ? parts[2].trim() : 'No disponible';
     conclusion = parts[3] ? parts[3].trim() : 'No disponible';
-    recommendations = parts[4] ? parts[4].trim() : 'No disponible';
+    recommendations = parts[4] ? formatRecommendations(parts[4].trim()) : 'No disponible';
   } else {
     // Nuevo formato estructurado
     score1 = results.evaluation.score1;
     score2 = results.evaluation.score2;
     justification = results.evaluation.justification;
     conclusion = results.evaluation.conclusion;
-    recommendations = results.evaluation.recommendations;
+    recommendations = formatRecommendations(results.evaluation.recommendations);
   }
 
   return (
@@ -59,7 +110,7 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
           <div className="score">{score1}</div>
         </div>
         
-        <div className="score-card">
+        <div className="score-card highlighted">
           <h3>Tu Prompt</h3>
           <div className="score">{score2}</div>
         </div>
@@ -67,17 +118,36 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
       
       <div className="analysis-section">
         <h3>Justificación</h3>
-        <p>{justification}</p>
+        <div className="markdown-content">
+          <ReactMarkdown>{justification}</ReactMarkdown>
+        </div>
       </div>
       
       <div className="analysis-section">
         <h3>Conclusión</h3>
-        <p>{conclusion}</p>
+        <div className="markdown-content">
+          <ReactMarkdown>{conclusion}</ReactMarkdown>
+        </div>
       </div>
       
       <div className="analysis-section">
         <h3>Recomendaciones</h3>
-        <p>{recommendations}</p>
+        <div className="markdown-content">
+          {/* Para mostrar el contenido formateado con negrita */}
+          <div dangerouslySetInnerHTML={{ 
+            __html: recommendations
+              .split('\n\n')
+              .map(line => line.trim())
+              .filter(line => line.length > 0)
+              .map(line => {
+                if (line.startsWith('- ')) {
+                  return `<p class="recommendation-item">${convertMarkdownToHtml(line)}</p>`;
+                }
+                return `<p>${convertMarkdownToHtml(line)}</p>`;
+              })
+              .join('')
+          }} />
+        </div>
       </div>
       
       <div className="user-info">

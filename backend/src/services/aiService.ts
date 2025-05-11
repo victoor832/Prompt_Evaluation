@@ -96,6 +96,40 @@ export class AIService {
     }
   }
 
+  // Método auxiliar para procesar el texto y enfocar en el prompt del usuario
+  private processEvaluationText(text: string): string {
+    // Fase 1: Reemplazar referencias directas a Prompt/Texto 1 y 2
+    let processed = text.replace(/Prompt 1|Texto 1/gi, "prompt predeterminado");
+    processed = processed.replace(/Prompt 2|Texto 2/gi, "prompt del usuario");
+    
+    // Fase 2: Eliminar o transformar secciones sobre el prompt predeterminado
+    
+    // Eliminar frases que comparan directamente ambos prompts
+    processed = processed.replace(/el prompt predeterminado es (mejor|peor) que el prompt del usuario[^.]*\./gi, "");
+    processed = processed.replace(/[^.]*?comparado con el prompt predeterminado[^.]*\./gi, "");
+    processed = processed.replace(/[^.]*?a diferencia del prompt predeterminado[^.]*\./gi, "");
+    processed = processed.replace(/el prompt predeterminado[^.]*?mientras que el prompt del usuario/gi, "El prompt del usuario");
+    
+    // Eliminar oraciones completas que solo hablan del prompt predeterminado
+    const sentences = processed.split(/(?<=[.!?])\s+/);
+    processed = sentences
+      .filter(sentence => {
+        // Mantener oraciones que no mencionan exclusivamente al prompt predeterminado
+        const onlyMentionsBasePrompt = 
+          sentence.toLowerCase().includes("prompt predeterminado") && 
+          !sentence.toLowerCase().includes("prompt del usuario");
+        
+        // Filtrar oraciones que solo hablan del prompt predeterminado
+        return !onlyMentionsBasePrompt;
+      })
+      .join(" ");
+    
+    // Fase 3: Eliminar cualquier mención restante al prompt predeterminado
+    processed = processed.replace(/prompt predeterminado/gi, "prompt que propone el reto");
+    
+    return processed;
+  }
+
   async evaluatePredefinedChallenge(challengeId: string, userPrompt: string, userId: string): Promise<EvaluationResponse> {
     // Obtener el reto predefinido
     const challenge = getChallengeById(challengeId);
@@ -138,26 +172,33 @@ export class AIService {
       
       Prompt 2 (Mejorado): ${userPrompt}
       
+      INSTRUCCIONES DE FORMATO:
+      - Puedes usar formato Markdown para resaltar puntos importantes (**negrita**, *cursiva*, listas con - o 1. etc.)
+      - Mantén una estructura clara con párrafos separados por líneas en blanco
+      - Usa **negrita** para destacar aspectos clave
+      - Cuando te refieras a los prompts, usa "prompt predeterminado" y "prompt del usuario" en lugar de "Prompt 1" y "Prompt 2"
+      - En la JUSTIFICACIÓN, enfócate en analizar el "prompt del usuario", sus fortalezas y debilidades
+      - En la CONCLUSIÓN, evalúa principalmente el prompt del usuario y sus méritos propios
+      - En las RECOMENDACIONES, concéntrate en mejorar el prompt del usuario independientemente de su puntuación
+      
       Debes seguir ESTRICTAMENTE este formato en tu respuesta (sin desviarte):
       
       PUNTUACIÓN TEXTO 1: [un número entre 0.00 y 100.00 con exactamente dos decimales]
       PUNTUACIÓN TEXTO 2: [un número entre 0.00 y 100.00 con exactamente dos decimales]
-      JUSTIFICACIÓN: [tu análisis detallado comparando ambos prompts, mínimo 100 palabras]
-      CONCLUSIÓN: [indica claramente qué prompt es mejor y por qué en 1-2 frases]
-      RECOMENDACIONES: [sugiere al menos 3 formas concretas de mejorar el prompt con menor puntuación]
+      JUSTIFICACIÓN: [tu análisis detallado del prompt del usuario, usa Markdown para formatear]
+      CONCLUSIÓN: [indica claramente las fortalezas o debilidades del prompt del usuario en 1-2 frases]
+      RECOMENDACIONES: [sugiere al menos 3 formas concretas de mejorar el prompt del usuario, usa listas con -]
     `;
   
     try {
-      console.log(`Enviando solicitud de evaluación a Groq para el usuario ${userId}, reto: ${challengeId}`);
       const response = await this.groq.chat.completions.create({
         messages: [{ role: "user", content: evaluationPrompt }],
         model: "llama-3.3-70b-versatile",
-        temperature: 0.1,
+        temperature: 0.8,
         max_tokens: 1500,
       });
       
       const evaluationText = response.choices[0].message.content || "";
-      console.log("Respuesta de evaluación recibida:", evaluationText.substring(0, 100) + "...");
       
       // Extraer y validar los componentes de la respuesta
       const scoreRegex1 = /PUNTUACIÓN TEXTO 1:\s*(\d+(?:\.\d{2})?)/i;
@@ -176,9 +217,16 @@ export class AIService {
       // Procesar valores extraídos
       let score1 = score1Match ? parseFloat(score1Match[1]) : 0;
       let score2 = score2Match ? parseFloat(score2Match[1]) : 0;
-      const justification = justificationMatch ? justificationMatch[1].trim() : "No se proporcionó justificación.";
-      const conclusion = conclusionMatch ? conclusionMatch[1].trim() : "No se proporcionó conclusión.";
-      const recommendations = recommendationsMatch ? recommendationsMatch[1].trim() : "No se proporcionaron recomendaciones.";
+      
+      // Procesar textos para enfocar en el prompt del usuario
+      let justification = justificationMatch ? justificationMatch[1].trim() : "No se proporcionó justificación.";
+      let conclusion = conclusionMatch ? conclusionMatch[1].trim() : "No se proporcionó conclusión.";
+      let recommendations = recommendationsMatch ? recommendationsMatch[1].trim() : "No se proporcionaron recomendaciones.";
+      
+      // Aplicar procesamiento de texto a cada sección
+      justification = this.processEvaluationText(justification);
+      conclusion = this.processEvaluationText(conclusion);
+      recommendations = this.processEvaluationText(recommendations);
       
       // Asegurar que las puntuaciones estén en el rango 0-100 con dos decimales
       score1 = Math.max(0, Math.min(100, score1));
@@ -208,14 +256,10 @@ export class AIService {
 
       try {
         await this.dbService.saveEvaluation(evaluationResponse, challengeId);
-        console.log('Evaluación guardada en MongoDB correctamente');
       } catch (dbError) {
         console.error('Error al guardar en MongoDB, continuando con respaldo local:', dbError);
         // No detener el flujo si falla MongoDB, ya tenemos respaldo local
       }
-
-      // Guardar en base de datos
-      await this.dbService.saveEvaluation(evaluationResponse, challengeId);
       
       return evaluationResponse;
     } catch (error: any) {
@@ -254,17 +298,25 @@ export class AIService {
       
       Texto 2: ${modifiedText}
       
+      INSTRUCCIONES DE FORMATO:
+      - Puedes usar formato Markdown para resaltar puntos importantes (**negrita**, *cursiva*, listas con - o 1. etc.)
+      - Mantén una estructura clara con párrafos separados por líneas en blanco
+      - Usa **negrita** para destacar aspectos clave
+      - Cuando te refieras a los textos, usa "texto predeterminado" y "texto del usuario" en lugar de "Texto 1" y "Texto 2"
+      - En la JUSTIFICACIÓN, enfócate en analizar el "texto del usuario", sus fortalezas y debilidades
+      - En la CONCLUSIÓN, evalúa principalmente el texto del usuario y sus méritos propios
+      - En las RECOMENDACIONES, concéntrate en mejorar el texto del usuario independientemente de su puntuación
+      
       Debes seguir ESTRICTAMENTE este formato en tu respuesta (sin desviarte):
       
       PUNTUACIÓN TEXTO 1: [un número entre 0.00 y 100.00 con exactamente dos decimales]
       PUNTUACIÓN TEXTO 2: [un número entre 0.00 y 100.00 con exactamente dos decimales]
-      JUSTIFICACIÓN: [tu análisis detallado comparando ambos textos, mínimo 100 palabras]
-      CONCLUSIÓN: [indica claramente qué texto es mejor y por qué en 1-2 frases]
-      RECOMENDACIONES: [sugiere al menos 3 formas concretas de mejorar el texto con menor puntuación]
+      JUSTIFICACIÓN: [tu análisis detallado del texto del usuario, usa Markdown para formatear]
+      CONCLUSIÓN: [indica claramente las fortalezas o debilidades del texto del usuario en 1-2 frases]
+      RECOMENDACIONES: [sugiere al menos 3 formas concretas de mejorar el texto del usuario, usa listas con -]
     `;
   
     try {
-      console.log(`Enviando solicitud de evaluación a Groq para el usuario ${userId}...`);
       const response = await this.groq.chat.completions.create({
         messages: [{ role: "user", content: evaluationPrompt }],
         model: "llama-3.3-70b-versatile",
@@ -273,7 +325,6 @@ export class AIService {
       });
       
       const evaluationText = response.choices[0].message.content || "";
-      console.log("Respuesta de evaluación recibida:", evaluationText.substring(0, 100) + "...");
       
       // Extraer y validar los componentes de la respuesta
       const scoreRegex1 = /PUNTUACIÓN TEXTO 1:\s*(\d+(?:\.\d{2})?)/i;
@@ -292,9 +343,16 @@ export class AIService {
       // Procesar valores extraídos
       let score1 = score1Match ? parseFloat(score1Match[1]) : 0;
       let score2 = score2Match ? parseFloat(score2Match[1]) : 0;
-      const justification = justificationMatch ? justificationMatch[1].trim() : "No se proporcionó justificación.";
-      const conclusion = conclusionMatch ? conclusionMatch[1].trim() : "No se proporcionó conclusión.";
-      const recommendations = recommendationsMatch ? recommendationsMatch[1].trim() : "No se proporcionaron recomendaciones.";
+      
+      // Procesar textos para enfocar en el texto del usuario
+      let justification = justificationMatch ? justificationMatch[1].trim() : "No se proporcionó justificación.";
+      let conclusion = conclusionMatch ? conclusionMatch[1].trim() : "No se proporcionó conclusión.";
+      let recommendations = recommendationsMatch ? recommendationsMatch[1].trim() : "No se proporcionaron recomendaciones.";
+      
+      // Aplicar procesamiento de texto a cada sección
+      justification = this.processEvaluationText(justification);
+      conclusion = this.processEvaluationText(conclusion);
+      recommendations = this.processEvaluationText(recommendations);
       
       // Asegurar que las puntuaciones estén en el rango 0-100 con dos decimales
       score1 = Math.max(0, Math.min(100, score1));
@@ -321,6 +379,13 @@ export class AIService {
       
       // Guardar la evaluación en un archivo local
       this.saveEvaluationToFile(userId, evaluationResponse, 'custom');
+
+      try {
+        await this.dbService.saveEvaluation(evaluationResponse, 'custom');
+      } catch (dbError) {
+        console.error('Error al guardar en MongoDB, continuando con respaldo local:', dbError);
+        // No detener el flujo si falla MongoDB, ya tenemos respaldo local
+      }
       
       return evaluationResponse;
     } catch (error: any) {

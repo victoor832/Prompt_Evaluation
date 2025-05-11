@@ -43,10 +43,8 @@ export class DatabaseService {
       this.db = this.client.db('ai-assessment');
       this.connected = true;
       this.connecting = false;
-      console.log('✅ Conectado a MongoDB Atlas correctamente');
     } catch (error) {
       this.connecting = false;
-      console.error('❌ Error al conectar a MongoDB:', error);
       throw error;
     }
   }
@@ -77,7 +75,6 @@ export class DatabaseService {
       };
 
       const result = await collection.insertOne(evalToSave);
-      console.log(`✅ Evaluación guardada en MongoDB con ID: ${result.insertedId}`);
       return result.insertedId.toString();
     } catch (error) {
       console.error('❌ Error al guardar evaluación en MongoDB:', error);

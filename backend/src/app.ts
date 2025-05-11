@@ -52,7 +52,6 @@ app.get('/api/test', (_req, res) => {
 });
 
 app.get('/api/challenges', (req, res) => {
-  console.log('Solicitud recibida para /api/challenges');
   try {
     // Enviar solo la información pública de los retos
     const publicChallenges = predefinedChallenges.map(({ id, title, description }) => ({
@@ -64,7 +63,6 @@ app.get('/api/challenges', (req, res) => {
     // Asegurar que la respuesta tenga el tipo MIME correcto
     res.setHeader('Content-Type', 'application/json');
     res.json(publicChallenges);
-    console.log('Retos enviados:', publicChallenges.length);
   } catch (error) {
     console.error('Error al obtener retos:', error);
     res.status(500).json({ error: 'Error al obtener retos predefinidos' });
