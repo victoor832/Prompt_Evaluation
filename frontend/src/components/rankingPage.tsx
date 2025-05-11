@@ -28,12 +28,9 @@ const RankingPage: React.FC = () => {
         setError('Error al cargar el ranking. Por favor, intenta más tarde.');
         
         // Datos de fallback en caso de error
-        const fallbackData = [
-          { username: "usuario_ejemplo1", score: 9.5 },
-          { username: "usuario_ejemplo2", score: 8.7 },
-          { username: "usuario_ejemplo3", score: 7.8 }
-        ];
+        console.log("No hay datos de ranking disponibles");
         console.log("Usando datos de fallback");
+        const fallbackData: UserRanking[] = [];
         setRanking(fallbackData);
         setFilteredRanking(fallbackData);
       } finally {

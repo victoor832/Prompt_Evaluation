@@ -193,7 +193,7 @@ export class AIService {
     try {
       const response = await this.groq.chat.completions.create({
         messages: [{ role: "user", content: evaluationPrompt }],
-        model: "llama-3.3-70b-versatile",
+        model: "deepseek-r1-distill-llama-70b",
         temperature: 0.8,
         max_tokens: 1500,
       });
@@ -319,7 +319,7 @@ export class AIService {
     try {
       const response = await this.groq.chat.completions.create({
         messages: [{ role: "user", content: evaluationPrompt }],
-        model: "llama-3.3-70b-versatile",
+        model: "deepseek-r1-distill-llama-70b",
         temperature: 0.1, // Reducimos la temperatura para respuestas más consistentes
         max_tokens: 1500, // Aumentamos el límite para permitir respuestas más detalladas
       });

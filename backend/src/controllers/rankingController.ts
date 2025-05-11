@@ -83,11 +83,7 @@ export const getRanking = async (req: Request, res: Response) => {
         
     // Añadir datos de ejemplo si no hay resultados
     if (ranking.length === 0) {
-      ranking = [
-        { username: "usuario_ejemplo1", score: 9.5 },
-        { username: "usuario_ejemplo2", score: 8.7 },
-        { username: "usuario_ejemplo3", score: 7.8 }
-      ];
+      console.log('No se encontraron evaluaciones. Agregando datos de ejemplo.');
     }
     
     // Filtrar por búsqueda
