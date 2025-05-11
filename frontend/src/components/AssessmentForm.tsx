@@ -1,6 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import ChallengeSelector from './ChallengeSelector';
 import './PredefChallengeForm.css';
+
+// Definir interfaces para los componentes memoizados
+interface TextareaProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  id: string;
+  placeholder: string;
+  required: boolean;
+}
+
+interface InputProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  id: string;
+  type: string;
+  placeholder: string;
+  required: boolean;
+}
+
+// Componente memoizado para el textarea
+const MemoizedTextarea = memo<TextareaProps>(({ value, onChange, id, placeholder, required }) => (
+  <textarea
+    id={id}
+    value={value}
+    onChange={onChange}
+    placeholder={placeholder}
+    required={required}
+  />
+));
+
+// Componente memoizado para el input
+const MemoizedInput = memo<InputProps>(({ value, onChange, id, type, placeholder, required }) => (
+  <input
+    id={id}
+    type={type}
+    value={value}
+    onChange={onChange}
+    placeholder={placeholder}
+    required={required}
+  />
+));
 
 interface PredefChallengeFormProps {
   setResults: (results: any) => void;
@@ -12,9 +53,17 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
   const [userPrompt, setUserPrompt] = useState('');
   const [userName, setUserName] = useState('');
 
-  const handleChallengeSelect = (challengeId: string) => {
+  const handleChallengeSelect = useCallback((challengeId: string) => {
     setSelectedChallengeId(challengeId);
-  };
+  }, []);
+
+  const handlePromptChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setUserPrompt(e.target.value);
+  }, []);
+
+  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(e.target.value);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,24 +115,24 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
         
         <div className="form-group">
           <label htmlFor="userPrompt">Tu Prompt Mejorado:</label>
-          <textarea
+          <MemoizedTextarea
             id="userPrompt"
             value={userPrompt}
-            onChange={(e) => setUserPrompt(e.target.value)}
+            onChange={handlePromptChange}
             placeholder="Escribe tu versión mejorada del prompt para este reto"
-            required
+            required={true}
           />
         </div>
         
         <div className="form-group">
           <label htmlFor="userName">Tu nombre o identificador:</label>
-          <input
+          <MemoizedInput
             id="userName"
             type="text"
             value={userName}
-            onChange={(e) => setUserName(e.target.value)}
+            onChange={handleNameChange}
             placeholder="Introduce tu nombre o ID"
-            required
+            required={true}
           />
         </div>
         
