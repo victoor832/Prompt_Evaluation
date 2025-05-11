@@ -6,6 +6,8 @@ import { AIService } from './services/aiService';
 import { predefinedChallenges } from './challenges/challenges';
 import * as evaluationController from './controllers/evaluationController';
 import { DatabaseService } from './services/databaseService';
+import * as rankingController from './controllers/rankingController';
+
 
 const cors = require('cors');
 const app = express();
@@ -40,6 +42,9 @@ const adminAuth = (req: express.Request, res: express.Response, next: express.Ne
 
 // 4. Rutas generales
 setRoutes(app);
+
+
+app.get('/api/ranking', rankingController.getRanking);
 
 // 5. Rutas específicas de la API
 app.get('/api/test', (_req, res) => {
@@ -159,17 +164,33 @@ app.get('/api/evaluations/user/:userId', async (req, res) => {
   }
 });
 
-// 7. Servir archivos estáticos del frontend (DESPUÉS de todas las rutas API)
-app.use(express.static(path.join(__dirname, '../../frontend/build')));
+// Determinar si estamos en modo producción o desarrollo
+const isProduction = process.env.NODE_ENV === 'production';
 
-// 8. Ruta comodín para SPA - debe ir DESPUÉS de todas las rutas de API
-app.get('*', (req, res) => {
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '../../frontend/build/index.html'));
-  } else {
-    res.status(404).json({ error: 'API endpoint not found' });
-  }
-});
+// Solo servir archivos estáticos en producción
+if (isProduction) {
+  app.use(express.static(path.join(__dirname, '../../frontend/build')));
+  
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(__dirname, '../../frontend/build/index.html'));
+    } else {
+      res.status(404).json({ error: 'API endpoint not found' });
+    }
+  });
+} else {
+  // En desarrollo, solo manejar rutas que comiencen con /api
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.status(404).json({ 
+        error: 'Frontend route not handled by backend in development mode',
+        message: 'Use the React development server on port 3000 for frontend routes'
+      });
+    } else {
+      res.status(404).json({ error: 'API endpoint not found' });
+    }
+  });
+}
 
 // 9. Middleware de "ruta no encontrada" - solo se ejecutará para rutas que no coincidan con nada
 app.use((req, res) => {

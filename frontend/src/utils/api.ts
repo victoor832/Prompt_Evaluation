@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 // Define la URL base para las llamadas a la API
-const API_BASE_URL = '/api';
-
+export const API_BASE_URL = '/api';
 /// Interfaz para los retos
 export interface Challenge {
   id: string;
