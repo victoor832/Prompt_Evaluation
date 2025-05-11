@@ -19,17 +19,28 @@ const RankingPage: React.FC = () => {
       try {
         setLoading(true);
         const response = await axios.get<UserRanking[]>(`/api/ranking`);
+        console.log("Datos recibidos del API:", response.data);
         setRanking(response.data);
         setFilteredRanking(response.data);
         setError(null);
       } catch (err: any) {
         console.error('Error al cargar el ranking:', err);
         setError('Error al cargar el ranking. Por favor, intenta más tarde.');
+        
+        // Datos de fallback en caso de error
+        const fallbackData = [
+          { username: "usuario_ejemplo1", score: 9.5 },
+          { username: "usuario_ejemplo2", score: 8.7 },
+          { username: "usuario_ejemplo3", score: 7.8 }
+        ];
+        console.log("Usando datos de fallback");
+        setRanking(fallbackData);
+        setFilteredRanking(fallbackData);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchRanking();
   }, []);
 
