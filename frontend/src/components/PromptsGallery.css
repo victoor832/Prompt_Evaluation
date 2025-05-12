@@ -110,7 +110,7 @@
 
 .example-score {
   background-color: var(--color-primary);
-  color: rgb(27, 27, 202);
+  color: #3498db;
   font-weight: bold;
   padding: 4px 8px;
   border-radius: 12px;

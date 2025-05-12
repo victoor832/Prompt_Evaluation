@@ -21,7 +21,7 @@ const promptExamples: PromptExample[] = [
     prompt: 'Explica cómo funciona internet a un niño de 8 años, usando analogías con cosas que conoce como carreteras, bibliotecas y carteros. Incluye una pequeña historia con personajes que representen partes de internet (routers, servidores, etc). La explicación debe ser divertida pero precisa.',
     explanation: 'Este prompt es efectivo porque: 1) Especifica la audiencia exacta, 2) Sugiere analogías concretas, 3) Pide elementos narrativos específicos, 4) Mantiene el equilibrio entre diversión y precisión.',
     score: 92,
-    tags: ['analogías', 'educativo', 'narrativo', 'para niños']
+    tags: ['Analogías', 'Educativo', 'Narrativo', 'Para niños']
   },
   {
     id: 'exp2',
@@ -30,7 +30,7 @@ const promptExamples: PromptExample[] = [
     prompt: 'Realiza un análisis literario del poema "Campos de Castilla" de Antonio Machado. Enfócate en: 1) El uso del paisaje como metáfora de España, 2) Elementos de la España rural y tradición, 3) Técnicas poéticas utilizadas. Para cada punto, incluye al menos dos citas textuales. Estructura tu análisis con introducción, desarrollo de los tres puntos y conclusión.',
     explanation: 'Este prompt destaca por: 1) Especificar exactamente qué analizar, 2) Solicitar puntos concretos, 3) Pedir citas textuales como evidencia, 4) Indicar una estructura clara.',
     score: 96,
-    tags: ['literatura', 'análisis', 'estructurado', 'académico']
+    tags: ['Literatura', 'Análisis', 'Estructurado', 'Académico']
   },
   {
     id: 'exp3',
@@ -39,7 +39,7 @@ const promptExamples: PromptExample[] = [
     prompt: 'Crea una receta de lasaña vegetariana que: 1) Sea baja en calorías, 2) No contenga gluten, 3) Use ingredientes fáciles de encontrar en supermercados españoles, 4) Pueda prepararse en menos de 45 minutos. Incluye tiempos de preparación y cocción, ingredientes con cantidades exactas (en gramos y mililitros), instrucciones paso a paso numeradas, e información nutricional por porción.',
     explanation: 'Este prompt funciona bien porque: 1) Define restricciones dietéticas claras, 2) Contextualiza geográficamente los ingredientes, 3) Establece un límite de tiempo, 4) Especifica el formato exacto deseado con unidades de medida.',
     score: 88,
-    tags: ['recetas', 'vegetariano', 'sin gluten', 'práctico']
+    tags: ['Recetas', 'Vegetariano', 'Sin gluten', 'Práctico']
   },
   {
     id: 'exp4',
@@ -48,7 +48,7 @@ const promptExamples: PromptExample[] = [
     prompt: 'Resuelve el siguiente problema de optimización: Encuentra las dimensiones del rectángulo de perímetro 100 metros que tiene el área máxima. Muestra: 1) El planteamiento del problema con variables claramente definidas, 2) El desarrollo algebraico paso a paso, 3) La aplicación del método de derivadas para encontrar máximos, 4) La comprobación del resultado. Incluye visualizaciones o representaciones gráficas que ayuden a entender el proceso.',
     explanation: 'Este prompt es excelente porque: 1) Plantea un problema matemático específico, 2) Solicita el proceso completo, no solo la respuesta, 3) Requiere verificación del resultado, 4) Pide elementos visuales para reforzar la comprensión.',
     score: 94,
-    tags: ['matemáticas', 'optimización', 'educativo', 'paso a paso']
+    tags: ['Matemáticas', 'Optimización', 'Educativo', 'Paso a paso']
   },
   {
     id: 'exp5',
@@ -57,7 +57,7 @@ const promptExamples: PromptExample[] = [
     prompt: 'Escribe un microcuento de ciencia ficción que cumpla con estas restricciones: 1) Máximo 300 palabras, 2) Ambientado en Marte en el año 2150, 3) Incluye un personaje que es mitad humano, mitad máquina, 4) El conflicto central debe relacionarse con la escasez de agua, 5) La historia debe empezar y terminar con la misma frase, 6) No debe incluir diálogos. El tono debe ser melancólico pero con un final esperanzador.',
     explanation: 'Este prompt sobresale porque: 1) Establece límites de extensión precisos, 2) Define el escenario espaciotemporal, 3) Impone restricciones formales creativas, 4) Especifica elementos narrativos y tonales concretos.',
     score: 91,
-    tags: ['ciencia ficción', 'microcuento', 'creatividad', 'restricciones']
+    tags: ['Ciencia ficción', 'Microcuento', 'Creatividad', 'Restricciones']
   }
 ];
 
