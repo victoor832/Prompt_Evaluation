@@ -15,6 +15,47 @@
     margin-top: 20px;
     width: 100%;
   }
+
+  home-link,
+  .ranking-link,
+  .gallery-link {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: white;
+  }
+
+  .gallery-link {
+    background-color: #8a2be2;
+  }
+
+  .home-link:hover,
+  .ranking-link:hover,
+  .gallery-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .home-link:active,
+  .ranking-link:active,
+  .gallery-link:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Actualizar los media queries para incluir el nuevo botón */
+  @media (max-width: 480px) {
+    .home-link,
+    .ranking-link,
+    .gallery-link {
+      width: 80%;
+      text-align: center;
+    }
+  }
   
   .home-link,
   .ranking-link {
@@ -61,11 +102,6 @@
     .ranking-link {
       padding: 8px 15px;
       font-size: 0.9rem;
-    }
-    
-    /* Ajustar estilos del contenido principal */
-    main {
-      padding: 0 10px;
     }
     
     /* Ajustar el tamaño del formulario */

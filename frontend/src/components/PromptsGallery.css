@@ -1,0 +1,337 @@
+.gallery-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: var(--color-background-secondary);
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
+}
+
+.gallery-container h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--color-text-primary);
+}
+
+.gallery-intro {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 30px;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.gallery-filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.category-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-filter label {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.category-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+.search-filter {
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+/* Grid de ejemplos - definición única */
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 40px 20px; /* Espacio vertical 40px, horizontal 20px */
+  margin-bottom: 30px;
+}
+
+/* Tarjeta de ejemplo - definición única */
+.example-card {
+  background-color: var(--color-background);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 500px; /* Altura mínima para consistencia visual */
+  border: 1px solid var(--color-border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative; /* Para gestionar mejor las transformaciones */
+}
+
+.example-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  z-index: 1; /* Asegurar que la tarjeta con hover esté por encima */
+}
+
+.example-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 10px;
+}
+
+.example-header h3 {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: 1.1rem;
+}
+
+.example-score {
+  background-color: var(--color-primary);
+  color: rgb(27, 27, 202);
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.example-category {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.example-prompt, .example-explanation {
+  margin-bottom: 15px;
+}
+
+.example-prompt h4, .example-explanation h4 {
+  color: var(--color-text-primary);
+  margin: 0 0 5px 0;
+  font-size: 0.95rem;
+}
+
+.example-prompt p, .example-explanation p {
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+  overflow-wrap: break-word; /* Permitir que las palabras largas se rompan */
+  word-break: break-word; /* Compatibilidad con navegadores más antiguos */
+}
+
+.example-prompt {
+  background-color: var(--color-primary-light);
+  padding: 10px;
+  margin-left: -10px;
+  border-radius: 6px;
+  border-left: 3px solid var(--color-primary);
+}
+
+.example-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+  margin-top: auto;
+}
+
+.tag {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-secondary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  border: 1px solid var(--color-border);
+}
+
+.use-template-btn {
+  /* Colores y fondo */
+  background-color: rgba(128, 128, 128, 0.164);
+  color: black;
+  border: none;
+  
+  /* Dimensiones y forma */
+  padding: 10px 16px;
+  border-radius: 6px;
+  width: 100%; /* Ocupa todo el ancho disponible */
+  
+  /* Tipografía */
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+  
+  /* Efectos visuales */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  
+  /* Posicionamiento */
+  margin-top: 15px;
+  
+  /* Alineación */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px; /* Espacio para el ícono */
+  
+  /* Transiciones */
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Añadir icono de copia antes del texto */
+.use-template-btn::before {
+  content: "📋";
+  font-size: 1.1em;
+}
+
+/* Estilo al pasar el cursor */
+.use-template-btn:hover {
+  background-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  opacity: 0.95;
+}
+
+/* Estilo al hacer clic */
+.use-template-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo cuando está copiado */
+.use-template-btn.copied {
+  background-color: var(--color-success);
+  animation: pulse 1s ease-in-out;
+}
+
+/* Cambiar el icono cuando está copiado */
+.use-template-btn.copied::before {
+  content: "✓";
+}
+
+/* Animación de pulso para feedback visual */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Botones en tema oscuro */
+.dark-theme .use-template-btn {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .use-template-btn:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .use-template-btn {
+    padding: 12px 16px; /* Botón más grande para móviles */
+    font-size: 1rem;
+  }
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: var(--color-text-secondary);
+  background-color: var(--color-background);
+  border-radius: 8px;
+  border: 1px dashed var(--color-border);
+}
+
+.no-results p:first-child {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Estilos específicos para tema oscuro */
+.dark-theme.gallery-container {
+  background-color: var(--color-background-secondary);
+}
+
+.dark-theme.example-card {
+  background-color: var(--color-background);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme.example-prompt {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme.tag {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.dark-theme.use-template-btn {
+  background-color: var(--color-success);
+}
+
+.dark-theme.use-template-btn.copied {
+  background-color: var(--color-success);
+}
+
+.dark-theme.category-select,
+.dark-theme.search-input {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.dark-theme.no-results {
+  background-color: var(--color-background);
+  border-color: var(--color-border);
+}
+
+/* Ajustes específicos para tema claro que podrían ser necesarios */
+.light-theme.example-card {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.light-theme.example-prompt {
+  background-color: rgba(0, 120, 255, 0.05);
+}
+
+/* Media queries - Versión única */
+@media (max-width: 768px) {
+  .gallery-filters {
+    flex-direction: column;
+  }
+  
+  .search-filter {
+    max-width: 100%;
+  }
+  
+  .examples-grid {
+    grid-template-columns: 1fr;
+    gap: 50px; /* Mayor espacio vertical entre cards en móvil */
+  }
+}

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Añade la importación de BrowserRouter y Routes
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import AssessmentForm from './components/AssessmentForm';
 import ResultsDisplay from './components/ResultsDisplay';
 import RankingPage from './components/rankingPage';
 import History from './components/History';
 import { ThemeProvider } from './contexts/ThemeContext';
+import PromptsGallery from './components/PromptsGallery';
 import './styles/style.css';
 
 function App() {
@@ -13,40 +14,48 @@ function App() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const HomePage = () => (
-  <>
-    <History /> {/* Añadir el componente de historial aquí */}
-    <AssessmentForm setResults={setResults} setLoading={setLoading} />
-    {loading && <div className="loading">Evaluando prompts...</div>}
-    {results && <ResultsDisplay results={results} />}
-  </>
+    <>
+      <History />
+      <AssessmentForm setResults={setResults} setLoading={setLoading} />
+      {loading && <div className="loading">Evaluando prompts...</div>}
+      {results && <ResultsDisplay results={results} />}
+    </>
   );
 
   return (
     <ThemeProvider>
-      <BrowserRouter> {/* Envuelve toda tu aplicación en BrowserRouter */}
+      <BrowserRouter>
         <div className="App">
-            <header className="App-header">
-              <h1>Sistema de Autoevaluación con IA</h1>
-              <p>Mejora tus prompts con feedback de IA</p>
-              <div className="nav-buttons">
-                <Link 
-                  to="/ranking"
-                  className="ranking-link"
-                >
-                  Ranking
-                </Link>
-                <Link 
-                  to="/" 
-                  className="home-link"
-                >
-                  Participar
-                </Link>
-              </div>
-            </header>
+          <header className="App-header">
+            <h1>Sistema de Autoevaluación con IA</h1>
+            <p>Mejora tus prompts con feedback de IA</p>
+            <div className="nav-buttons">
+              <Link 
+                to="/" 
+                className="home-link"
+              >
+                Participar
+              </Link>
+              <Link 
+                to="/ranking"
+                className="ranking-link"
+              >
+                Ranking
+              </Link>
+                            <Link 
+                to="/gallery"
+                className="gallery-link"
+              >
+                Ejemplos
+              </Link>
+            </div>
+          </header>
+          
           <main>
-            <Routes> {/* Usa Routes para envolver todas tus rutas */}
+            <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/ranking" element={<RankingPage />} />
+              <Route path="/gallery" element={<PromptsGallery />} />
             </Routes>
           </main>
         </div>
