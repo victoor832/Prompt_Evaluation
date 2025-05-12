@@ -1,0 +1,27 @@
+/* frontend/src/components/EvaluationRadar.css */
+.radar-container {
+  background-color: var(--color-background-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: var(--shadow-card);
+}
+
+.radar-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 10px;
+}
+
+.radar-chart {
+  height: 350px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .radar-chart {
+    height: 300px;
+  }
+}

@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import EvaluationRadar from './EvaluationRadar';
+import { useTheme } from '../contexts/ThemeContext';
 import './ResultDisplay.css';
 
 interface ResultsDisplayProps {
@@ -20,6 +22,9 @@ interface ResultsDisplayProps {
 }
 
 const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
+  // Usar el contexto de tema
+  const { isDarkMode } = useTheme();
+  
   // Verificar si hay error
   if (!results.success) {
     return (
@@ -100,6 +105,9 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
     recommendations = formatRecommendations(results.evaluation.recommendations);
   }
 
+  // Convertir score2 a número para el gráfico radar
+  const numericScore = parseFloat(score2) || 50; // Usar 50 como valor predeterminado si no es un número válido
+
   return (
     <div className="results-container">
       <h2>Resultados de la Evaluación</h2>
@@ -115,6 +123,12 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ results }) => {
           <div className="score">{score2}</div>
         </div>
       </div>
+      
+      {/* Componente de radar para visualizar aspectos de la evaluación */}
+      <EvaluationRadar 
+        evaluationText={justification + " " + conclusion} 
+        score={numericScore}
+      />
       
       <div className="analysis-section">
         <h3>Justificación</h3>
