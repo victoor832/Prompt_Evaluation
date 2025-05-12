@@ -56,6 +56,15 @@
       text-align: center;
     }
   }
+
+  @media (max-width: 768px) {
+    .home-link, 
+    .ranking-link,
+    .gallery-link {
+      font-size: .9rem;
+      padding: 8px 15px;
+    }
+  }
   
   .home-link,
   .ranking-link {
