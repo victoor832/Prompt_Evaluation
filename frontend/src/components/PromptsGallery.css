@@ -284,11 +284,11 @@
 }
 
 .dark-theme.example-prompt {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #0000001c;
 }
 
 .dark-theme.tag {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #0000001c;
 }
 
 .dark-theme.use-template-btn {
