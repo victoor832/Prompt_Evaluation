@@ -1,0 +1,323 @@
+/* AssessmentForm.css */
+.assessment-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.assessment-form h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333333;
+  font-weight: 700;
+  position: relative;
+}
+
+.assessment-form h2::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: #007bff;
+  margin: 0.5rem auto 0;
+}
+
+.assessment-form h3 {
+  color: #333333;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.assessment-form form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Selector de retos */
+.challenge-selector {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.challenge-selector label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.challenge-selector select {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.challenge-selector select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Detalles del reto seleccionado */
+.challenge-details {
+  width: 100%;
+  margin: 1.5rem 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  text-align: center;
+}
+
+.challenge-description {
+  color: #6c757d;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.base-prompt {
+  background-color: #e9f5ff;
+  padding: 15px;
+  border-radius: 6px;
+  border-left: 3px solid #007bff;
+  text-align: left;
+}
+
+.base-prompt h4 {
+  margin-top: 0;
+  color: #495057;
+  font-size: 0.95rem;
+}
+
+.base-prompt p {
+  margin-bottom: 0;
+  color: #212529;
+}
+
+/* Grupos de formulario */
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-group textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.form-group input {
+  width: 100%;
+  height: 40px;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.form-group textarea:focus,
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Encabezado del prompt */
+.prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+/* Controles de borrador */
+.draft-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.save-status {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.clear-draft-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.clear-draft-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.prompt-hint {
+  text-align: right;
+  margin-top: 5px;
+  color: #000000;
+  width: 100%;
+}
+
+/* Campo de nombre de usuario */
+.user-name-group {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.user-name-input {
+  width: 100%;
+  height: 40px;
+  padding: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+
+.user-name-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.name-hint {
+  margin-top: 5px;
+  color: #000000;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.submit-btn {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 2rem;
+  }
+  
+  .submit-btn:hover {
+    background-color: #0d9646;
+  }
+  
+  .submit-btn:active {
+    transform: translateY(1px);
+  }
+  
+  .submit-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+/* Estados de carga y error */
+.error-loading, .loading-challenges {
+  text-align: center;
+  padding: 1rem;
+  color: #6c757d;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.error-loading {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.loading {
+  text-align: center;
+  margin: 2rem 0;
+  color: #495057;
+  font-size: 1.1rem;
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+  .assessment-form {
+    padding: 1.5rem;
+  }
+  
+  .prompt-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .draft-controls {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+  
+  .form-group textarea,
+  .form-group input {
+    padding: 0.6rem;
+  }
+  
+  .submit-btn {
+    padding: 0.8rem !important;
+    max-width: 100% !important;
+  }
+  
+  .challenge-details {
+    padding: 15px;
+  }
+}

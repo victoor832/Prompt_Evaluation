@@ -109,7 +109,7 @@
 }
 
 .example-score {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary); /* Cambiar por rgba(128, 128, 128, 0.164) */
   color: #3498db;
   font-weight: bold;
   padding: 4px 8px;

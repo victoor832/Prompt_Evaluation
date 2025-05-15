@@ -1,116 +1,61 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ChallengeSelector from './ChallengeSelector';
 import { saveToHistory } from '../services/historyService';
-import './PredefChallengeForm.css';
+import { Challenge } from '../types';
+import './AssessmentForm.css'; // Asegúrate de tener estilos para el componente
 
-// Definir interfaces para los componentes memoizados
-interface TextareaProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  id: string;
-  placeholder: string;
-  required: boolean;
-}
+// Definir claves para localStorage
+const USER_PROMPT_KEY = 'draft_user_prompt';
+const SELECTED_CHALLENGE_KEY = 'draft_selected_challenge';
+const USER_NAME_KEY = 'user_name'; // Clave para el nombre de usuario
 
-interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  basePrompt: string;
-  criteria: string;
-}
-
-interface InputProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  id: string;
-  type: string;
-  placeholder: string;
-  required: boolean;
-}
-
-// Componente memoizado para el textarea
-const MemoizedTextarea = memo<TextareaProps>(({ value, onChange, id, placeholder, required }) => (
-  <textarea
-    id={id}
-    value={value}
-    onChange={onChange}
-    placeholder={placeholder}
-    required={required}
-  />
-));
-
-// Componente memoizado para el input
-const MemoizedInput = memo<InputProps>(({ value, onChange, id, type, placeholder, required }) => (
-  <input
-    id={id}
-    type={type}
-    value={value}
-    onChange={onChange}
-    placeholder={placeholder}
-    required={required}
-  />
-));
-
-interface PredefChallengeFormProps {
+// Interfaz para props del componente
+interface AssessmentFormProps {
   setResults: (results: any) => void;
   setLoading: (loading: boolean) => void;
 }
 
-const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, setLoading }) => {
-  const [selectedChallengeId, setSelectedChallengeId] = useState('');
-  const [selectedChallengeTitle, setSelectedChallengeTitle] = useState('');
-  const [userPrompt, setUserPrompt] = useState('');
-  const [userName, setUserName] = useState(() => {
-    // Intentar obtener el nombre de usuario guardado anteriormente
-    return localStorage.getItem('userName') || '';
+const AssessmentForm: React.FC<AssessmentFormProps> = ({ setResults, setLoading }) => {
+  // Estado para desafíos
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const [isLoadingChallenges, setIsLoadingChallenges] = useState(true);
+  const [errorLoadingChallenges, setErrorLoadingChallenges] = useState(false);
+  
+  // Inicializar con valores guardados
+  const [selectedChallengeId, setSelectedChallengeId] = useState(() => {
+    return localStorage.getItem(SELECTED_CHALLENGE_KEY) || '';
   });
   
-  // Nuevo estado para almacenar los challenges
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
-  const [isLoadingChallenges, setIsLoadingChallenges] = useState(false);
-  const [errorLoadingChallenges, setErrorLoadingChallenges] = useState('');
-
-  // Guardar el nombre de usuario en localStorage cuando cambie
-  useEffect(() => {
-    if (userName) {
-      localStorage.setItem('userName', userName);
-    }
-  }, [userName]);
-
-  // Cargar los challenges del backend al montar el componente
+  const [userPrompt, setUserPrompt] = useState(() => {
+    return localStorage.getItem(USER_PROMPT_KEY) || '';
+  });
+  
+  // Estado para el nombre de usuario
+  const [userName, setUserName] = useState(() => {
+    return localStorage.getItem(USER_NAME_KEY) || '';
+  });
+  
+  // Estado para mensaje de guardado
+  const [saveStatus, setSaveStatus] = useState<string>('');
+  
+  // Cargar desafíos con propiedad criteria garantizada
   useEffect(() => {
     const fetchChallenges = async () => {
-      setIsLoadingChallenges(true);
       try {
         const response = await fetch('/api/challenges');
-        if (!response.ok) {
-          throw new Error('Error al obtener los retos');
-        }
+        if (!response.ok) throw new Error('Error cargando retos');
         const data = await response.json();
-        setChallenges(data);
-        setErrorLoadingChallenges('');
-      } catch (error) {
-        console.error('Error al cargar los retos:', error);
-        setErrorLoadingChallenges('No se pudieron cargar los retos. Por favor, recarga la página.');
         
-        // Cargar datos de ejemplo si no se pueden obtener del backend
-        setChallenges([
-          {
-            id: "challenge1",
-            title: "Explicar conceptos complejos",
-            description: "Mejora este prompt para explicar conceptos complejos de forma simple",
-            basePrompt: "Explica la relatividad general",
-            criteria: "Claridad, simplicidad, precisión"
-          },
-          {
-            id: "challenge2",
-            title: "Crear historias creativas",
-            description: "Mejora este prompt para generar historias más originales",
-            basePrompt: "Escribe una historia sobre un viaje espacial",
-            criteria: "Originalidad, coherencia, nivel de detalle"
-          }
-        ]);
+        // Asegurar que todos los desafíos tengan la propiedad criteria
+        const challengesWithCriteria = data.map((challenge: any) => ({
+          ...challenge,
+          criteria: challenge.criteria || 'Criterios de evaluación generales'
+        }));
+        
+        setChallenges(challengesWithCriteria);
+      } catch (error) {
+        console.error('Error:', error);
+        setErrorLoadingChallenges(true);
       } finally {
         setIsLoadingChallenges(false);
       }
@@ -118,27 +63,66 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
     
     fetchChallenges();
   }, []);
-
-  const handleChallengeSelect = useCallback((challengeId: string) => {
-    setSelectedChallengeId(challengeId);
-    
-    // Buscar el título del challenge seleccionado
-    const selectedChallenge = challenges.find(c => c.id === challengeId);
-    if (selectedChallenge) {
-      setSelectedChallengeTitle(selectedChallenge.title);
-      console.log(`Seleccionado reto: ${selectedChallenge.title}`);
+  
+  // Efecto para autoguardar el prompt mientras se escribe
+  useEffect(() => {
+    if (userPrompt) {
+      localStorage.setItem(USER_PROMPT_KEY, userPrompt);
+      // Mostrar mensaje de guardado
+      setSaveStatus('Guardando...');
+      const timer = setTimeout(() => setSaveStatus('Guardado'), 500);
+      return () => clearTimeout(timer);
+    } else if (userPrompt === '') {
+      // Si se borra todo el contenido, también eliminarlo del localStorage
+      localStorage.removeItem(USER_PROMPT_KEY);
+      setSaveStatus('');
     }
-  }, [challenges]);
-
+  }, [userPrompt]);
+  
+  // Efecto para guardar el ID del desafío seleccionado
+  useEffect(() => {
+    if (selectedChallengeId) {
+      localStorage.setItem(SELECTED_CHALLENGE_KEY, selectedChallengeId);
+    } else {
+      localStorage.removeItem(SELECTED_CHALLENGE_KEY);
+    }
+  }, [selectedChallengeId]);
+  
+  // Efecto para guardar el nombre de usuario
+  useEffect(() => {
+    if (userName) {
+      localStorage.setItem(USER_NAME_KEY, userName);
+    }
+  }, [userName]);
+  
+  // Manejar cambios en el prompt con autoguardado
   const handlePromptChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setUserPrompt(e.target.value);
   }, []);
-
-  const handleNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  
+  // Manejar cambios en el nombre de usuario
+  const handleUserNameChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target.value);
   }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  
+  // Manejar la tecla Ctrl+Enter para enviar
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      const form = e.currentTarget.closest('form');
+      if (form) {
+        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
+    }
+  }, []);
+  
+  // Manejar selección de desafío
+  const handleChallengeSelect = useCallback((challengeId: string) => {
+    setSelectedChallengeId(challengeId);
+  }, []);
+  
+  // Manejar envío del formulario
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!selectedChallengeId) {
@@ -151,9 +135,17 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
       return;
     }
     
+    // Validar que se haya ingresado un nombre de usuario
+    if (!userName.trim()) {
+      alert('Por favor, ingresa tu nombre o identificador');
+      return;
+    }
+    
     setLoading(true);
     
     try {
+      const selectedChallenge = challenges.find(c => c.id === selectedChallengeId);
+      
       const response = await fetch('/api/evaluate-challenge', {
         method: 'POST',
         headers: {
@@ -162,7 +154,7 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
         body: JSON.stringify({
           challengeId: selectedChallengeId,
           userPrompt,
-          userId: userName || 'anonymous_user'
+          userName // Incluir el nombre de usuario en la solicitud
         }),
       });
       
@@ -172,11 +164,19 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
       
       const result = await response.json();
       
-      console.log('Resultado recibido:', result);
+      // Incluir nombre de usuario en los resultados
+      result.userName = userName;
       
-      // IMPORTANTE: Guardar en historial con el título del reto
-      saveToHistory(result, selectedChallengeTitle);
-      console.log(`Guardando en historial: ${selectedChallengeTitle}`);
+      // Guardar en historial
+      if (result.success && selectedChallenge) {
+        saveToHistory(result, selectedChallenge.title);
+      }
+      
+      // Limpiar borrador después de envío exitoso
+      localStorage.removeItem(USER_PROMPT_KEY);
+      localStorage.removeItem(SELECTED_CHALLENGE_KEY);
+      // No eliminar el nombre de usuario para futuras evaluaciones
+      setSaveStatus('');
       
       setResults(result);
     } catch (error) {
@@ -185,14 +185,25 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
     } finally {
       setLoading(false);
     }
-  };
+  }, [challenges, selectedChallengeId, userPrompt, userName, setLoading, setResults]);
+  
+  // Borrar el borrador guardado
+  const clearSavedDraft = useCallback(() => {
+    localStorage.removeItem(USER_PROMPT_KEY);
+    setUserPrompt('');
+    setSaveStatus('Borrador eliminado');
+    setTimeout(() => setSaveStatus(''), 1500);
+  }, []);
+  
+  // Obtener el reto seleccionado
+  const selectedChallenge = challenges.find(c => c.id === selectedChallengeId);
 
   return (
-    <div className="predef-challenge-form">
-      <h2>Evaluación de Prompts con Retos Predefinidos</h2>
-      
+    <div className="assessment-form">
       {errorLoadingChallenges && (
-        <div className="error-message">{errorLoadingChallenges}</div>
+        <div className="error-loading">
+          Error cargando los retos. Por favor, intenta recargar la página.
+        </div>
       )}
       
       {isLoadingChallenges ? (
@@ -201,37 +212,70 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
         <form onSubmit={handleSubmit}>
           <ChallengeSelector 
             onSelectChallenge={handleChallengeSelect} 
-            challenges={challenges} 
+            challenges={challenges}
+            selectedChallengeId={selectedChallengeId}
           />
           
+          {selectedChallenge && (
+            <div className="challenge-details">
+              <h3>{selectedChallenge.title}</h3>
+              <p className="challenge-description">{selectedChallenge.description}</p>
+              <div className="base-prompt">
+                <h4>Prompt Base:</h4>
+                <p>{selectedChallenge.basePrompt}</p>
+              </div>
+            </div>
+          )}
+          
           <div className="form-group">
-            <label htmlFor="userPrompt">Tu Prompt Mejorado:</label>
-            <MemoizedTextarea
+            <div className="prompt-header">
+              <label htmlFor="userPrompt">Tu Prompt Mejorado:</label>
+              {userPrompt && (
+                <div className="draft-controls">
+                  {saveStatus && <span className="save-status">{saveStatus}</span>}
+                  <button 
+                    type="button" 
+                    className="clear-draft-btn" 
+                    onClick={clearSavedDraft}
+                    title="Borrar borrador guardado"
+                  >
+                    Borrar borrador
+                  </button>
+                </div>
+              )}
+            </div>
+            
+            <textarea
               id="userPrompt"
               value={userPrompt}
               onChange={handlePromptChange}
+              onKeyDown={handleKeyDown}
               placeholder="Escribe tu versión mejorada del prompt para este reto"
               required={true}
             />
+            <div className="prompt-hint">
+              <small>Sugerencia: Usa Ctrl+Enter (o ⌘+Enter en Mac) para enviar.</small>
+            </div>
           </div>
           
-          <div className="form-group">
-            <label htmlFor="userName">Tu nombre o identificador:</label>
-            <MemoizedInput
-              id="userName"
+          {/* Campo de nombre de usuario */}
+          <div className="form-group user-name-group">
+            <label htmlFor="userName">Tu Nombre/Identificador:</label>
+            <input
               type="text"
+              id="userName"
               value={userName}
-              onChange={handleNameChange}
-              placeholder="Introduce tu nombre o ID"
+              onChange={handleUserNameChange}
+              placeholder="Ingresa tu nombre o ID para el ranking"
               required={true}
+              className="user-name-input"
             />
+            <div className="name-hint">
+              <small>Este nombre aparecerá en el ranking si tu prompt obtiene una buena puntuación.</small>
+            </div>
           </div>
           
-          <button 
-            type="submit" 
-            className="submit-btn" 
-            disabled={!selectedChallengeId || challenges.length === 0}
-          >
+          <button type="submit" className="submit-btn">
             Evaluar Prompt
           </button>
         </form>
@@ -240,4 +284,4 @@ const PredefChallengeForm: React.FC<PredefChallengeFormProps> = ({ setResults, s
   );
 };
 
-export default PredefChallengeForm;
+export default AssessmentForm;
