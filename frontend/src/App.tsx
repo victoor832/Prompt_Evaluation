@@ -36,12 +36,12 @@ function App() {
               >
                 Participar
               </Link>
-              <Link 
+                {/* <Link 
                 to="/ranking"
                 className="ranking-link"
-              >
+                >
                 Ranking
-              </Link>
+                </Link> */}
                             <Link 
                 to="/gallery"
                 className="gallery-link"

@@ -258,7 +258,7 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({ setResults, setLoading 
             </div>
           </div>
           
-          {/* Campo de nombre de usuario */}
+          {/* Campo de nombre de usuario 
           <div className="form-group user-name-group">
             <label htmlFor="userName">Tu Nombre/Identificador:</label>
             <input
@@ -274,6 +274,7 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({ setResults, setLoading 
               <small>Este nombre aparecerá en el ranking si tu prompt obtiene una buena puntuación.</small>
             </div>
           </div>
+          */}
           
           <button type="submit" className="submit-btn">
             Evaluar Prompt

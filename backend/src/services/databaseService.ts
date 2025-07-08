@@ -1,4 +1,4 @@
-import { MongoClient, Collection, Db, Document } from 'mongodb';
+/*import { MongoClient, Collection, Db, Document } from 'mongodb';
 import { EvaluationResponse } from '../types';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -11,11 +11,11 @@ export class DatabaseService {
   private connecting: boolean = false;
 
 
-  constructor() {
-    const mongoUri = process.env.MONGODB_URI;
-    if (!mongoUri) {
-      throw new Error('MONGODB_URI no está configurada en variables de entorno');
-    }
+//  constructor() {
+//    const mongoUri = process.env.MONGODB_URI;
+//    if (!mongoUri) {
+//      throw new Error('MONGODB_URI no está configurada en variables de entorno');
+//    }
 
     this.client = new MongoClient(mongoUri, {
       // Estas opciones son importantes para producción
@@ -114,4 +114,4 @@ export class DatabaseService {
       throw error;
     }
   }
-}
+} */

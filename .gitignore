@@ -3,6 +3,7 @@ node_modules/
 /.pnp
 .pnp.js
 yarn-error.log
+.dockerignore
 
 # Variables de entorno y configuración
 .env
