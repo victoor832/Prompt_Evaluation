@@ -1,7 +1,7 @@
 import { Groq } from "groq-sdk";
 import { EvaluationResponse } from '../types';
 import { getChallengeById } from '../challenges/challenges';
-import { DatabaseService } from './databaseService';
+// import { DatabaseService } from './databaseService';
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -9,7 +9,7 @@ dotenv.config();
 
 export class AIService {
   private groq: Groq;
-  private dbService: DatabaseService;
+  // private dbService: any;
 
   constructor() {
     const apiKey = process.env.GROQ_API_KEY;
@@ -21,7 +21,7 @@ export class AIService {
     this.groq = new Groq({ apiKey });
     
     // Usar el patrón singleton para la base de datos
-    this.dbService = DatabaseService.getInstance();
+    // this.dbService = undefined;
     
     // Iniciar la conexión en la construcción
     this.dbService.connect().catch(err => {

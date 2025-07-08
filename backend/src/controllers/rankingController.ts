@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DatabaseService } from '../services/databaseService';
+// import { DatabaseService } from '../services/databaseService';
 
 // Interfaces actualizadas para reflejar la estructura real
 interface EvaluationData {
@@ -22,14 +22,15 @@ interface Evaluation {
   [key: string]: any;
 }
 
-const dbService = DatabaseService.getInstance();
+// const dbService = DatabaseService.getInstance();
 
 export const getRanking = async (req: Request, res: Response) => {
   try {
     const searchUsername = req.query.username as string | undefined;
     
     // Obtenemos todas las evaluaciones
-    const evaluations = await dbService.getAllEvaluations(1000);
+    // const evaluations = await dbService.getAllEvaluations(1000);
+    // TODO: Reemplazar por lógica alternativa si es necesario
     
     // Creamos un mapa para calcular las puntuaciones por usuario
     const userScores = new Map<string, { username: string, score: number, evaluationCount: number }>();

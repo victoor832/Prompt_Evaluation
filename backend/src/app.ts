@@ -5,7 +5,7 @@ import 'dotenv/config';
 import { AIService } from './services/aiService';
 import { predefinedChallenges } from './challenges/challenges';
 import * as evaluationController from './controllers/evaluationController';
-import { DatabaseService } from './services/databaseService';
+// import { DatabaseService } from './services/databaseService';
 import * as rankingController from './controllers/rankingController';
 
 
@@ -14,10 +14,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // 1. Inicializar singleton de base de datos
-const dbService = DatabaseService.getInstance();
 dbService.connect().catch(err => {
   console.warn('No se pudo conectar a MongoDB inicialmente:', err.message);
 });
+// const dbService = DatabaseService.getInstance();
+// dbService.connect().catch(err => {
+//   console.warn('No se pudo conectar a MongoDB inicialmente:', err.message);
+// });
 
 // 2. Middleware generales
 app.use(cors());
@@ -121,45 +124,18 @@ app.post('/api/evaluate-challenge', async (req, res) => {
 
 // 6. Rutas para admin (protegidas)
 app.get('/api/admin/evaluations', adminAuth, async (req, res) => {
-  try {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const evaluations = await dbService.getAllEvaluations(limit);
-    return res.json(evaluations);
-  } catch (error: any) {
-    console.error('Error al obtener evaluaciones:', error);
-    return res.status(500).json({ error: 'Error interno del servidor', details: error.message });
-  }
+  // MongoDB deshabilitado
+  return res.status(501).json({ error: 'Funcionalidad no implementada: almacenamiento de evaluaciones deshabilitado.' });
 });
 
 app.get('/api/admin/evaluations/download', adminAuth, async (req, res) => {
-  try {
-    const evaluations = await dbService.getAllEvaluations(1000);
-    
-    // Crear un nombre de archivo con la fecha actual
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const filename = `evaluaciones_${timestamp}.json`;
-    
-    // Configurar las cabeceras para descarga
-    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-    res.setHeader('Content-Type', 'application/json');
-    
-    // Enviar los datos como un archivo para descargar
-    res.json(evaluations);
-  } catch (error: any) {
-    console.error('Error al descargar evaluaciones:', error);
-    return res.status(500).json({ error: 'Error interno del servidor', details: error.message });
-  }
+  // MongoDB deshabilitado
+  return res.status(501).json({ error: 'Funcionalidad no implementada: descarga de evaluaciones deshabilitada.' });
 });
 
 app.get('/api/evaluations/user/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const evaluations = await dbService.getEvaluationsByUser(userId);
-    return res.json(evaluations);
-  } catch (error: any) {
-    console.error(`Error al obtener evaluaciones del usuario ${req.params.userId}:`, error);
-    return res.status(500).json({ error: 'Error interno del servidor', details: error.message });
-  }
+  // MongoDB deshabilitado
+  return res.status(501).json({ error: 'Funcionalidad no implementada: consulta de evaluaciones por usuario deshabilitada.' });
 });
 
 // Determinar si estamos en modo producción o desarrollo
