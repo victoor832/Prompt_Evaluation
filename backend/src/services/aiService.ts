@@ -20,13 +20,7 @@ export class AIService {
     
     this.groq = new Groq({ apiKey });
     
-    // Usar el patrón singleton para la base de datos
-    // this.dbService = undefined;
-    
-    // Iniciar la conexión en la construcción
-    this.dbService.connect().catch(err => {
-      console.warn('No se pudo conectar a MongoDB inicialmente, se reintentará en las operaciones:', err.message);
-    });
+    // No usar base de datos
   }
   
   // Método para guardar la evaluación en un archivo
@@ -255,7 +249,7 @@ export class AIService {
       this.saveEvaluationToFile(userId, evaluationResponse, challengeId);
 
       try {
-        await this.dbService.saveEvaluation(evaluationResponse, challengeId);
+        // Guardado en base de datos deshabilitado
       } catch (dbError) {
         console.error('Error al guardar en MongoDB, continuando con respaldo local:', dbError);
         // No detener el flujo si falla MongoDB, ya tenemos respaldo local
@@ -381,7 +375,7 @@ export class AIService {
       this.saveEvaluationToFile(userId, evaluationResponse, 'custom');
 
       try {
-        await this.dbService.saveEvaluation(evaluationResponse, 'custom');
+        // Guardado en base de datos deshabilitado
       } catch (dbError) {
         console.error('Error al guardar en MongoDB, continuando con respaldo local:', dbError);
         // No detener el flujo si falla MongoDB, ya tenemos respaldo local
