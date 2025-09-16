@@ -57,10 +57,12 @@ app.get('/api/test', (_req, res) => {
 app.get('/api/challenges', (req, res) => {
   try {
     // Enviar solo la información pública de los retos
-    const publicChallenges = predefinedChallenges.map(({ id, title, description }) => ({
+    const publicChallenges = predefinedChallenges.map(({ id, title, description, basePrompt, criteria }) => ({
       id,
       title,
-      description
+      description,
+      basePrompt,
+      criteria
     }));
     
     // Asegurar que la respuesta tenga el tipo MIME correcto
@@ -123,8 +125,14 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// 10. Iniciar el servidor - siempre debe ser lo último
-app.listen(PORT, () => {
+
+// Exportar el handler para Vercel
+module.exports = app;
+
+// Permitir ejecución local para desarrollo
+if (require.main === module) {
+  app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Try accessing: http://localhost:${PORT}/api/test`);
-});
+  });
+}
