@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define la URL base para las llamadas a la API
-export const API_BASE_URL = '/api';
+export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 /// Interfaz para los retos
 export interface Challenge {
   id: string;
