@@ -1,40 +1,40 @@
+
 # AI Self-Assessment Project
 
-Este proyecto implementa un sistema de autoevaluación utilizando inteligencia artificial. Permite a los usuarios generar textos, evaluarlos y recibir retroalimentación a través de una interfaz sencilla.
+This project implements a self-assessment system using artificial intelligence. It allows users to generate texts, evaluate them, and receive feedback through a simple interface.
 
-## Estructura del Proyecto
+## Project Structure
 
-El proyecto está dividido en dos partes principales: **backend** y **frontend**.
+The project is divided into two main parts: **backend** and **frontend**.
 
 ### Backend
 
-El backend está construido con TypeScript y se encarga de manejar la lógica de la aplicación, incluyendo la generación de textos y la evaluación de los mismos. Los archivos principales son:
+The backend is built with TypeScript and handles the application logic, including text generation and evaluation. Main files:
 
-- **src/app.ts**: Punto de entrada de la aplicación. Configura el servidor y las rutas.
-- **src/controllers/evaluationController.ts**: Contiene la clase `EvaluationController` con métodos para evaluar textos.
-- **src/routes/index.ts**: Configura las rutas del backend.
-- **src/services/aiService.ts**: Interactúa con la API de OpenAI para generar textos y realizar evaluaciones.
-- **src/services/textGenerationService.ts**: Contiene métodos para generar textos a partir de prompts.
-- **src/types/index.ts**: Define las interfaces para las peticiones y respuestas de evaluación.
+- **src/app.ts**: Application entry point. Sets up the server and routes.
+- **src/controllers/evaluationController.ts**: Contains the `EvaluationController` class with methods for text evaluation.
+- **src/routes/index.ts**: Configures backend routes.
+- **src/services/aiService.ts**: Interacts with the OpenAI API to generate texts and perform evaluations.
+- **src/services/textGenerationService.ts**: Methods for generating texts from prompts.
+- **src/types/index.ts**: Defines interfaces for evaluation requests and responses.
 
 ### Frontend
 
-El frontend está construido con React y proporciona una interfaz de usuario para interactuar con el sistema de autoevaluación. Los archivos principales son:
+The frontend is built with React and provides a user interface to interact with the self-assessment system. Main files:
 
-- **public/index.html**: Página HTML principal que carga la aplicación.
-- **src/App.tsx**: Componente principal que maneja el estado y la lógica de la aplicación.
-- **src/components/AssessmentForm.tsx**: Permite al usuario ingresar el prompt y ajustar parámetros.
-- **src/components/ResultsDisplay.tsx**: Muestra los resultados de la evaluación y la justificación de la IA.
-- **src/utils/api.ts**: Funciones para interactuar con el backend.
+- **public/index.html**: Main HTML page that loads the app.
+- **src/App.tsx**: Main component handling app state and logic.
+- **src/components/AssessmentForm.tsx**: Lets users enter prompts and adjust parameters.
+- **src/components/ResultsDisplay.tsx**: Shows evaluation results and AI justification.
+- **src/utils/api.ts**: Functions to interact with the backend.
 
+## Installation and Deployment
 
-## Instalación y despliegue
+### Local Installation
 
-### Instalación local
-
-1. Clona el repositorio:
+1. Clone the repository:
     ```
-    git clone <URL_DEL_REPOSITORIO>
+    git clone <REPOSITORY_URL>
     ```
 
 2. Backend:
@@ -51,43 +51,43 @@ El frontend está construido con React y proporciona una interfaz de usuario par
     npm run start
     ```
 
-### Despliegue en Vercel
+### Deployment on Vercel
 
-Puedes desplegar el backend y el frontend como proyectos separados en Vercel.
+You can deploy the backend and frontend as separate projects on Vercel.
 
-#### Variables de entorno
+#### Environment Variables
 
-- En el frontend, configura en `.env`:
+- In the frontend, set in `.env`:
    ```
-   REACT_APP_API_URL=https://<URL_DEL_BACKEND_VERCE>/api
-   ```
-
-- En el backend, configura en `.env`:
-   ```
-   GEMINI_API_KEY=tu_api_key_de_gemini
-   ADMIN_API_KEY=tu_api_key_de_admin
+   REACT_APP_API_URL=https://<BACKEND_VERCEL_URL>/api
    ```
 
-#### Notas importantes
-- El backend utiliza el modelo Gemini (`gemini-2.5-flash`) para la evaluación de textos.
-- Asegúrate de que las variables de entorno estén configuradas en el panel de Vercel para producción.
-- El backend expone los endpoints bajo el prefijo `/api` (por ejemplo, `/api/evaluate`).
+- In the backend, set in `.env`:
+   ```
+   GEMINI_API_KEY=your_gemini_api_key
+   ADMIN_API_KEY=your_admin_api_key
+   ```
 
-## Uso
+#### Important Notes
+- The backend uses the Gemini model (`gemini-2.5-flash`) for text evaluation.
+- Make sure environment variables are set in the Vercel dashboard for production.
+- The backend exposes endpoints under the `/api` prefix (e.g., `/api/evaluate`).
 
-Una vez desplegado, accede al frontend en la URL pública de Vercel. La aplicación se conectará automáticamente al backend usando la variable de entorno configurada.
+## Usage
 
-Puedes probar el endpoint de evaluación con:
+Once deployed, access the frontend at the public Vercel URL. The app will automatically connect to the backend using the configured environment variable.
+
+You can test the evaluation endpoint with:
 ```
-curl -X POST https://<URL_DEL_BACKEND_VERCE>/api/evaluate \
+curl -X POST https://<BACKEND_VERCEL_URL>/api/evaluate \
    -H "Content-Type: application/json" \
-   -d '{"originalText":"Describe el proceso de fotosíntesis.","modifiedText":"Explica cómo las plantas convierten la luz solar en energía.","criteria":"Claridad y precisión científica","userId":"usuario1"}'
+   -d '{"originalText":"Describe the process of photosynthesis.","modifiedText":"Explain how plants convert sunlight into energy.","criteria":"Clarity and scientific accuracy","userId":"user1"}'
 ```
 
-## Contribuciones
+## Contributions
 
-Las contribuciones son bienvenidas. Si deseas contribuir, por favor abre un issue o envía un pull request.
+Contributions are welcome. If you want to contribute, please open an issue or submit a pull request.
 
-## Licencia
+## License
 
-Este proyecto está bajo la Licencia MIT.
+This project is licensed under the MIT License.
