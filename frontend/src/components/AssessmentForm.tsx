@@ -220,9 +220,8 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({ setResults, setLoading 
           {selectedChallenge && (
             <div className="challenge-details">
               <h3>{selectedChallenge.title}</h3>
-              <p className="challenge-description">{selectedChallenge.description}</p>
               <div className="base-prompt">
-                <h4>Prompt Base:</h4>
+                <h4>Description:</h4>
                 <p>{selectedChallenge.basePrompt}</p>
               </div>
             </div>
