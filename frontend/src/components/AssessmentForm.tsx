@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ChallengeSelector from './ChallengeSelector';
+import { API_BASE_URL } from '../utils/api';
 import { saveToHistory } from '../services/historyService';
 import { Challenge } from '../types';
 import './AssessmentForm.css'; // Asegúrate de tener estilos para el componente
@@ -42,7 +43,7 @@ const AssessmentForm: React.FC<AssessmentFormProps> = ({ setResults, setLoading 
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
-        const response = await fetch('/api/challenges');
+  const response = await fetch(`${API_BASE_URL}/challenges`);
         if (!response.ok) throw new Error('Error cargando retos');
         const data = await response.json();
         
