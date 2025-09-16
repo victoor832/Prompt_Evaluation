@@ -27,32 +27,62 @@ El frontend está construido con React y proporciona una interfaz de usuario par
 - **src/components/ResultsDisplay.tsx**: Muestra los resultados de la evaluación y la justificación de la IA.
 - **src/utils/api.ts**: Funciones para interactuar con el backend.
 
-## Instalación
 
-Para instalar y ejecutar el proyecto, sigue estos pasos:
+## Instalación y despliegue
+
+### Instalación local
 
 1. Clona el repositorio:
+    ```
+    git clone <URL_DEL_REPOSITORIO>
+    ```
+
+2. Backend:
+    ```
+    cd backend
+    npm install
+    npm run start
+    ```
+
+3. Frontend:
+    ```
+    cd frontend
+    npm install
+    npm run start
+    ```
+
+### Despliegue en Vercel
+
+Puedes desplegar el backend y el frontend como proyectos separados en Vercel.
+
+#### Variables de entorno
+
+- En el frontend, configura en `.env`:
    ```
-   git clone <URL_DEL_REPOSITORIO>
+   REACT_APP_API_URL=https://<URL_DEL_BACKEND_VERCE>/api
    ```
 
-2. Navega al directorio del backend y ejecuta:
+- En el backend, configura en `.env`:
    ```
-   cd backend
-   npm install
-   npm run start
+   GEMINI_API_KEY=tu_api_key_de_gemini
+   ADMIN_API_KEY=tu_api_key_de_admin
    ```
 
-3. Navega al directorio del frontend y ejecuta:
-   ```
-   cd frontend
-   npm install
-   npm run start
-   ```
+#### Notas importantes
+- El backend utiliza el modelo Gemini (`gemini-2.5-flash`) para la evaluación de textos.
+- Asegúrate de que las variables de entorno estén configuradas en el panel de Vercel para producción.
+- El backend expone los endpoints bajo el prefijo `/api` (por ejemplo, `/api/evaluate`).
 
 ## Uso
 
-Una vez que ambos servidores estén en funcionamiento, abre tu navegador y dirígete a `http://localhost:3000` para acceder a la aplicación. Desde allí, podrás ingresar textos y recibir evaluaciones generadas por la inteligencia artificial.
+Una vez desplegado, accede al frontend en la URL pública de Vercel. La aplicación se conectará automáticamente al backend usando la variable de entorno configurada.
+
+Puedes probar el endpoint de evaluación con:
+```
+curl -X POST https://<URL_DEL_BACKEND_VERCE>/api/evaluate \
+   -H "Content-Type: application/json" \
+   -d '{"originalText":"Describe el proceso de fotosíntesis.","modifiedText":"Explica cómo las plantas convierten la luz solar en energía.","criteria":"Claridad y precisión científica","userId":"usuario1"}'
+```
 
 ## Contribuciones
 
