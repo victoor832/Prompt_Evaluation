@@ -33,8 +33,9 @@ export class EvaluationController {
                 userIdentifier
             );
             res.json(evaluationResults);
-        } catch (error) {
-            res.status(500).json({ error: 'Error evaluating texts' });
+        } catch (error: any) {
+            console.error('Error evaluating texts:', error);
+            res.status(500).json({ error: 'Error evaluating texts', details: error?.message || error });
         }
     }
 }

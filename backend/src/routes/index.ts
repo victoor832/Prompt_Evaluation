@@ -7,6 +7,6 @@ const aiService = new AIService(); // Create an instance of AIService
 const evaluationController = new EvaluationController(aiService);
 
 export const setRoutes = (app: unknown) => {
-    router.post('/evaluate', evaluationController.evaluateTexts);
+    router.post('/evaluate', evaluationController.evaluateTexts.bind(evaluationController));
     return router;
 };

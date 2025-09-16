@@ -305,7 +305,7 @@ export class AIService {
     `;
   
     try {
-  const model = this.gemini.getGenerativeModel({ model: "gemini-pro" });
+  const model = this.gemini.getGenerativeModel({ model: "gemini-2.5-flash" });
   const result = await model.generateContent(evaluationPrompt);
   const response = await result.response;
   const evaluationText = response.text();

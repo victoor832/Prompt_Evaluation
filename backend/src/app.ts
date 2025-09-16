@@ -44,7 +44,7 @@ const adminAuth = (req: express.Request, res: express.Response, next: express.Ne
 };
 
 // 4. Rutas generales
-setRoutes(app);
+app.use('/api', setRoutes(app));
 
 
 app.get('/api/ranking', rankingController.getRanking);
@@ -72,55 +72,6 @@ app.get('/api/challenges', (req, res) => {
   }
 });
 
-app.post('/api/evaluate', async (req, res) => {
-  try {
-    const { originalText, modifiedText, criteria, userId = "anonymous_user" } = req.body;
-    
-    // Validar que se recibieron todos los datos necesarios
-    if (!originalText || !modifiedText || !criteria) {
-      return res.status(400).json({
-        success: false,
-        message: 'Se requieren originalText, modifiedText y criteria'
-      });
-    }
-    
-    const aiService = new AIService();
-    const result = await aiService.evaluateTexts(originalText, modifiedText, criteria, userId);
-          
-    return res.json(result);
-  } catch (error: any) {
-    console.error('Error en ruta /api/evaluate:', error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || 'Error interno del servidor'
-    });
-  }
-});
-
-app.post('/api/evaluate-challenge', async (req, res) => {
-  try {
-    const { challengeId, userPrompt, userId = "anonymous_user" } = req.body;
-    
-    // Validar datos
-    if (!challengeId || !userPrompt) {
-      return res.status(400).json({
-        success: false,
-        message: 'Se requieren challengeId y userPrompt'
-      });
-    }
-    
-    const aiService = new AIService();
-    const result = await aiService.evaluatePredefinedChallenge(challengeId, userPrompt, userId);
-          
-    return res.json(result);
-  } catch (error: any) {
-    console.error('Error en ruta /api/evaluate-challenge:', error);
-    return res.status(500).json({
-      success: false,
-      message: error.message || 'Error interno del servidor'
-    });
-  }
-});
 
 // 6. Rutas para admin (protegidas)
 app.get('/api/admin/evaluations', adminAuth, async (req, res) => {
