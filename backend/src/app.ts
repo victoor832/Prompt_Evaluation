@@ -14,9 +14,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // 1. Inicializar singleton de base de datos
-dbService.connect().catch(err => {
-  console.warn('No se pudo conectar a MongoDB inicialmente:', err.message);
-});
+// dbService.connect().catch((err: any) => {
+//   console.warn('No se pudo conectar a MongoDB inicialmente:', err.message);
+// });
 // const dbService = DatabaseService.getInstance();
 // dbService.connect().catch(err => {
 //   console.warn('No se pudo conectar a MongoDB inicialmente:', err.message);

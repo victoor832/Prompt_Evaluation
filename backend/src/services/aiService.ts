@@ -1,4 +1,4 @@
-import { Groq } from "groq-sdk";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { EvaluationResponse } from '../types';
 import { getChallengeById } from '../challenges/challenges';
 // import { DatabaseService } from './databaseService';
@@ -8,17 +8,15 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export class AIService {
-  private groq: Groq;
+  private gemini: GoogleGenerativeAI;
   // private dbService: any;
 
   constructor() {
-    const apiKey = process.env.GROQ_API_KEY;
-    
+    const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        throw new Error('GROQ_API_KEY no está configurada. Asegúrate de tener un archivo .env con esta variable.');
+      throw new Error('GEMINI_API_KEY no está configurada. Asegúrate de tener un archivo .env con esta variable.');
     }
-    
-    this.groq = new Groq({ apiKey });
+    this.gemini = new GoogleGenerativeAI(apiKey);
     
     // No usar base de datos
   }
@@ -185,14 +183,10 @@ export class AIService {
     `;
   
     try {
-      const response = await this.groq.chat.completions.create({
-        messages: [{ role: "user", content: evaluationPrompt }],
-        model: "deepseek-r1-distill-llama-70b",
-        temperature: 0.8,
-        max_tokens: 1500,
-      });
-      
-      const evaluationText = response.choices[0].message.content || "";
+  const model = this.gemini.getGenerativeModel({ model: "gemini-pro" });
+  const result = await model.generateContent(evaluationPrompt);
+  const response = await result.response;
+  const evaluationText = response.text();
       
       // Extraer y validar los componentes de la respuesta
       const scoreRegex1 = /PUNTUACIÓN TEXTO 1:\s*(\d+(?:\.\d{2})?)/i;
@@ -311,14 +305,10 @@ export class AIService {
     `;
   
     try {
-      const response = await this.groq.chat.completions.create({
-        messages: [{ role: "user", content: evaluationPrompt }],
-        model: "deepseek-r1-distill-llama-70b",
-        temperature: 0.1, // Reducimos la temperatura para respuestas más consistentes
-        max_tokens: 1500, // Aumentamos el límite para permitir respuestas más detalladas
-      });
-      
-      const evaluationText = response.choices[0].message.content || "";
+  const model = this.gemini.getGenerativeModel({ model: "gemini-pro" });
+  const result = await model.generateContent(evaluationPrompt);
+  const response = await result.response;
+  const evaluationText = response.text();
       
       // Extraer y validar los componentes de la respuesta
       const scoreRegex1 = /PUNTUACIÓN TEXTO 1:\s*(\d+(?:\.\d{2})?)/i;

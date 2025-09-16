@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 // import { DatabaseService } from '../services/databaseService';
 
 // Interfaces actualizadas para reflejar la estructura real
@@ -28,22 +30,30 @@ export const getRanking = async (req: Request, res: Response) => {
   try {
     const searchUsername = req.query.username as string | undefined;
     
-    // Obtenemos todas las evaluaciones
-    // const evaluations = await dbService.getAllEvaluations(1000);
-    // TODO: Reemplazar por lógica alternativa si es necesario
-    
+    // Leer todas las evaluaciones desde archivos JSON en la carpeta /backend/evaluations
+    const evaluationsDir = path.join(__dirname, '../../evaluations');
+    let evaluations: Evaluation[] = [];
+    if (fs.existsSync(evaluationsDir)) {
+      const files = fs.readdirSync(evaluationsDir).filter(f => f.endsWith('.json'));
+      evaluations = files.flatMap(file => {
+        try {
+          const data = fs.readFileSync(path.join(evaluationsDir, file), 'utf8');
+          const evalObj = JSON.parse(data);
+          return Array.isArray(evalObj) ? evalObj : [evalObj];
+        } catch (err) {
+          console.warn(`No se pudo leer el archivo ${file}:`, err);
+          return [];
+        }
+      });
+    }
     // Creamos un mapa para calcular las puntuaciones por usuario
     const userScores = new Map<string, { username: string, score: number, evaluationCount: number }>();
-    
     // Procesar las evaluaciones para calcular puntuaciones
     evaluations.forEach((evaluation: Evaluation) => {
       if (!evaluation.userId || evaluation.userId === 'anonymous_user') return;
-      
       const username = evaluation.username || evaluation.userId;
-      
       // Extraer y verificar la puntuación - corregido para la estructura anidada
       let score = 0;
-      
       // 1. Verificar si existe el objeto evaluation anidado y score2 dentro de él
       if (evaluation.evaluation && evaluation.evaluation.score2 !== undefined) {
         score = typeof evaluation.evaluation.score2 === 'number' ? 
